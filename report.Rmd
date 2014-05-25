@@ -74,11 +74,33 @@ To see the most impacting events concerning population health, we will see a plo
 
 ```{r echo=TRUE}
 library(ggplot2)
+
+agg_health$Event.Type <- factor(agg_health$Event.Type, as.character(agg_health$Event.Type))
+
 ggplot(agg_health[1:15,], aes(x=Event.Type, y=Impact)) + 
     coord_flip() +
-    geom_bar(width=1, stat="identity")
+    geom_bar(width=1, stat="identity") +
+    labs(title="Health impact by event type")
 ```
 
-Across all US, we will see which 
+Across all US, we can see that tornados are by far the most impacting weather event in terms of population health and safety.
+
+Tornados brings more than 10 times more damage for health than **Excessive Heat**, the second more impacting weather event.
+
+# Top events by economic impact
+
+To see the most economic impacting weather events, let's plot the same top 15 bar graphic, but using the total economic impact.
+
+```{r echo=TRUE}
+library(ggplot2)
+
+agg_economic$Event.Type <- factor(agg_economic$Event.Type, as.character(agg_economic$Event.Type))
+
+ggplot(agg_economic[1:15,], aes(x=Event.Type, y=Impact)) + 
+    coord_flip() +
+    geom_bar(width=1, stat="identity") +
+    labs(title="Economic impact by event type")
+```
+
 
 # Results
