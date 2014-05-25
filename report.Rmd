@@ -5,7 +5,7 @@ Economic and Health Consequences of Weather in US
 
 This report will summarize the consequences of weather events in health and economics of US.
 
-For this porpouse, we will use U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database, which addresses importante information about weather events and its consequences, such as fatalities, injuries, and property damage.
+For this porpouse, we will use U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database, which addresses important information about weather events and its consequences, such as fatalities, injuries, and property damage.
 
 We will address two main questions:
 
@@ -18,9 +18,9 @@ We will address two main questions:
 For the data processing, first we need to download the file (available http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2) and read the CSV from the Bz2 file.
 
 The code for this task is the following:
-```{r cache=TRUE}
+```{r echo=TRUE, cache=TRUE}
 if(!file.exists("./data/StormData.csv.bz2")) {
-    download.file("http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2", "data./StormData.csv.bz2")
+    download.file("http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2", "./data/StormData.csv.bz2")
 }
 
 data <- read.csv(bzfile("./data/StormData.csv.bz2"))
@@ -83,10 +83,6 @@ ggplot(agg_health[1:15,], aes(x=Event.Type, y=Impact)) +
     labs(title="Health impact by event type")
 ```
 
-Across all US, we can see that tornados are by far the most impacting weather event in terms of population health and safety.
-
-Tornados brings more than 10 times more damage for health than **Excessive Heat**, the second more impacting weather event.
-
 # Top events by economic impact
 
 To see the most economic impacting weather events, let's plot the same top 15 bar graphic, but using the total economic impact.
@@ -102,5 +98,14 @@ ggplot(agg_economic[1:15,], aes(x=Event.Type, y=Impact)) +
     labs(title="Economic impact by event type")
 ```
 
-
 # Results
+
+Across all US, we can see that tornados are by far the most impacting weather event in terms of population health and safety.
+
+Tornados brings more than 10 times more damage for health than **Excessive Heat**, the second more impacting weather event.
+
+In the economic point of view, **tornados** are only the third more impacting event. In this case, **flood** is much worst than **tornados**, and even **hurricanes** brings a little more problems than **tornados** to the economy.
+
+# Further works
+
+As a suggestion for future works, it would be interesting to compare these impacts over time. This way, we would be able to see if any kind of event is getting more problematic to society over time, and try to prevent trouble with these types of weather events in the future.
