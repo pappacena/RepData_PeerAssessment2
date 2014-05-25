@@ -1,0 +1,84 @@
+Economic and Health Consequences of Weather in US
+========================================================
+
+# Summary
+
+This report will summarize the consequences of weather events in health and economics of US.
+
+For this porpouse, we will use U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database, which addresses importante information about weather events and its consequences, such as fatalities, injuries, and property damage.
+
+We will address two main questions:
+
+* Which weather events are more harmful in terms of population health?
+* Which weather events has the greatest economic consequences?
+
+
+# Data Processing
+
+For the data processing, first we need to download the file (available http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2) and read the CSV from the Bz2 file.
+
+The code for this task is the following:
+```{r cache=TRUE}
+if(!file.exists("./data/StormData.csv.bz2")) {
+    download.file("http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2", "data./StormData.csv.bz2")
+}
+
+data <- read.csv(bzfile("./data/StormData.csv.bz2"))
+```
+
+To make it easier to see the economic impact on each event, we will convert the PROPDMG and PROPDMGEXP to a suitable number to work with.
+
+```{r echo=TRUE}
+data$ECONOMIC_IMPACT <- ifelse(toupper(data$PROPDMGEXP) %in% c("k", "K"),
+                               data$PROPDMG * 10^3,
+                        ifelse(toupper(data$PROPDMGEXP) %in% c("m", "M"),
+                                data$PROPDMG * 10^6,
+                        ifelse(toupper(data$PROPDMGEXP) %in% c("b", "B"),
+                                data$PROPDMG * 10^9,
+                                data$PROPDMG)))
+```
+
+Note that values with units other than "K", "M" or "B" will be equals to it's original value.
+
+To measure the health impact, we will just sum up the number of injuried people and the number of death caused by the event, as follow:
+
+```{r echo=TRUE}
+data$HEALTH_IMPACT <- data$FATALITIES + data$INJURIES
+```
+
+Since we are only working with these two new columns and the event types for now on, we will build two small versions of the original dataset:
+
+- an aggregation of total economic impact by event type
+- an aggregation of total health impact by event type
+
+Both datasets will be sorted by total impacts in a descending way.
+
+```{r echo=TRUE, cache=TRUE}
+agg_economic <- aggregate(data$ECONOMIC_IMPACT,
+                          list(EventType=data$EVTYPE),
+                               sum)
+names(agg_economic) <- c("Event.Type", "Impact")
+agg_economic <- agg_economic[with(agg_economic, order(-Impact)), ]
+                          
+
+agg_health <- aggregate(data$HEALTH_IMPACT,
+                        list(EventType=data$EVTYPE),
+                        sum)
+names(agg_health) <- c("Event.Type", "Impact")
+agg_health <- agg_health[with(agg_health, order(-Impact)), ]
+```
+
+# Top events by health impact
+
+To see the most impacting events concerning population health, we will see a plot of the top 15 events by it's impact:
+
+```{r echo=TRUE}
+library(ggplot2)
+ggplot(agg_health[1:15,], aes(x=Event.Type, y=Impact)) + 
+    coord_flip() +
+    geom_bar(width=1, stat="identity")
+```
+
+Across all US, we will see which 
+
+# Results
